@@ -68,6 +68,7 @@ Vagrant.configure("2") do |config|
           ansible.galaxy_role_file = "requirements.yml"
           ansible.verbose = "v"
           ansible.limit = "all"
+          ansible.raw_arguments = ["-f #{number_machines}"]
           ansible.groups = {
             "mimir" => ["mimir[1:#{mimir_num}]"],
             "loki" => ["loki[1:#{loki_num}]"],
