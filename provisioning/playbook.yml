@@ -20,8 +20,6 @@
         ports:
           - 9000:9000
           - 9001:9001
-        networks:
-          - name: molecule
         env:
           MINIO_ROOT_USER: "testtest"
           MINIO_ROOT_PASSWORD: "testtest"
