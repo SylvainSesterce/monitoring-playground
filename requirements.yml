@@ -2,3 +2,5 @@
 collections:
   # With just the collection name
   - ansible.posix
+  - community.docker
+  - grafana.grafana

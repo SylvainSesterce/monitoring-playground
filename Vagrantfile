@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
   # For a complete reference, please see the online documentation at
   # https://docs.vagrantup.com.
 
-  mimir_num = 1
+  mimir_num = 3
   loki_num = 1
   grafana_num = 1
   # Every Vagrant development environment requires a box. You can search for
@@ -23,7 +23,7 @@ Vagrant.configure("2") do |config|
   # Private Network configuration
   private_network_prefix = "192.168.56.1"  # Choose a suitable prefix
 
-  number_machines = mimir_num + loki_num + grafana_num
+  number_machines = mimir_num + loki_num + grafana_num - 1
   nodes = []
   (0..number_machines).each do |i|
     case i
@@ -57,21 +57,22 @@ Vagrant.configure("2") do |config|
 
       # Shared Folder
       # machine.vm.synced_folder "../data", "/vagrant_data"
-
-      machine.vm.provision "ansible" do |ansible|
-        ansible.compatibility_mode = "2.0"
-        ansible.playbook = "provisioning/playbook.yml"
-        ansible.galaxy_command = "ansible-galaxy install -r %{role_file}"
-        ansible.galaxy_role_file = "requirements.yml"
-        ansible.verbose = "v"
-        ansible.groups = {
-          "mimir" => ["mimir[1:#{mimir_num}]"],
-          "loki" => ["loki[1:#{loki_num}]"],
-          "grafana" => ["grafana"],
-          "monitoring:children" => ["loki", "mimir","grafana"],
-        }
+      if node == nodes.last
+        machine.vm.provision "ansible" do |ansible|
+          ansible.compatibility_mode = "2.0"
+          ansible.playbook = "provisioning/playbook.yml"
+          ansible.galaxy_command = "ansible-galaxy install -r %{role_file}"
+          ansible.galaxy_role_file = "requirements.yml"
+          ansible.verbose = "v"
+          ansible.limit = "all"
+          ansible.groups = {
+            "mimir" => ["mimir[1:#{mimir_num}]"],
+            "loki" => ["loki[1:#{loki_num}]"],
+            "grafana_ui" => ["grafana"],
+            "monitoring:children" => ["loki", "mimir","grafana_ui"],
+          }
+        end
       end
-
   end
 
   # Provider-specific configuration
