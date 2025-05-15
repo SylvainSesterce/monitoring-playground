@@ -55,6 +55,9 @@ Vagrant.configure("2") do |config|
       # Public Network
       machine.vm.network "public_network", dev: "enp4s0" # or "eth0" or your appropriate network interface
 
+      machine.vm.provision :hosts, :sync_hosts => true
+      machine.vm.disk :disk, size: "50GB", primary: true
+
       # Shared Folder
       # machine.vm.synced_folder "../data", "/vagrant_data"
       if node == nodes.last
@@ -80,6 +83,12 @@ Vagrant.configure("2") do |config|
     lv.memory = "2048"
     lv.cpus = 2
   end
+
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 2048
+    v.cpus = 2
+  end
+
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs

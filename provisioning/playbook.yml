@@ -1,14 +1,33 @@
 ---
 - name: Configure VMs
   hosts: all
+  become: true
   roles:
     - packages
+    - role: grafana.grafana.alloy
+      vars:
+        alloy_config: |
+          prometheus.scrape "default" {
+              targets = [{"__address__" = "127.0.0.1:12345"}]
+              forward_to = [prometheus.remote_write.prom.receiver]
+          }
+          prometheus.remote_write "prom" {
+            endpoint {
+                url = "http://mimir1:9009/api/v1/push"
+            }
+          }
   tasks:
     - name: Install local ssh key
       ansible.posix.authorized_key:
         user: "{{ ansible_user }}"
         state: present
         key: "{{ lookup('file', '/home/tassadar/.ssh/framework.pub') }}"
+
+- name: Deploy Loki using the default configuration
+  hosts: loki
+  become: true
+  roles:
+    - role: grafana.grafana.loki
 
 - name: Deploy mimir
   hosts: mimir
@@ -52,3 +71,17 @@
             - mimir1:7946
             - mimir2:7946
             - mimir3:7946
+
+- name: Deploy Grafana
+  hosts: grafana
+  roles:
+    - role: grafana.grafana.grafana
+      vars:
+        grafana_ini:
+          security:
+            admin_user: admin
+            admin_password: admin
+        #grafana_dashboards:
+        #  - dashboard_id: 111
+        #    revision_id: 1
+        #    datasource: prometheus
