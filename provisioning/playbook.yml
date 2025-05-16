@@ -7,16 +7,37 @@
     - role: grafana.grafana.alloy
       vars:
         alloy_config: |
-          prometheus.scrape "default" {
-              targets = [
-                {
+          prometheus.scrape "alloy" {
+              targets = array.concat(
+                prometheus.exporter.unix.default.targets,
+                [{
                     "__address__" = "127.0.0.1:12345",
                     application   = "alloy",
                     environmennt  = "production",
                 },
-              ]
+              ])
               forward_to = [prometheus.remote_write.prom.receiver]
           }
+
+          prometheus.exporter.unix "default" {
+            include_exporter_metrics = true
+            disable_collectors       = ["mdadm","xfs","zfs"]
+            enable_collectors = [
+              "cpu",
+              "meminfo",
+              "filesystem",
+              "ntp",
+              "perf",
+              "processes",
+              "systemd",
+              "tcpstat",
+            ]
+            filesystem {
+              fs_types_exclude     = "^(devtmpfs|tmpfs|overlay|proc|squashfs|pstore|securityfs|sysfs  |tracefs|udev)$"
+              mount_points_exclude = "^/(proc|run|sys|dev/pts|dev/hugepages)($|/)"
+            }
+          }
+
           prometheus.remote_write "prom" {
             endpoint {
                 url = "http://mimir1:8080/api/v1/push"
@@ -90,7 +111,17 @@
           security:
             admin_user: admin
             admin_password: admin
-        #grafana_dashboards:
-        #  - dashboard_id: 111
-        #    revision_id: 1
-        #    datasource: prometheus
+        grafana_datasources:
+          - name: mimir
+            type: prometheus
+            url: http://mimir1:8080/prometheus
+            basicAuth: false
+            jsonData:
+              httpHeaderName1: X-Scope-OrgID
+              httpMethod: POST
+            secureJsonData:
+              httpHeaderValue1: staging
+        grafana_dashboards:
+          - dashboard_id: 1860
+            revision_id: 40
+            datasource: mimir

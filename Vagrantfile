@@ -23,9 +23,10 @@ Vagrant.configure("2") do |config|
   # Private Network configuration
   private_network_prefix = "192.168.56.1"  # Choose a suitable prefix
 
-  number_machines = mimir_num + loki_num + grafana_num - 1
+  number_machines = mimir_num + loki_num + grafana_num
+  range_machines = range_machines - 1
   nodes = []
-  (0..number_machines).each do |i|
+  (0..range_machines).each do |i|
     case i
       when 0
         nodes[i] = {
@@ -37,7 +38,7 @@ Vagrant.configure("2") do |config|
           "name" => "mimir#{i}",
           "priv_ip" => "#{private_network_prefix}#{1 + i}"
         }
-      when mimir_num..number_machines
+      when mimir_num..range_machines
         nodes[i] = {
           "name" => "loki#{i - mimir_num }",
           "priv_ip" => "#{private_network_prefix}#{1 + i}"
@@ -81,13 +82,13 @@ Vagrant.configure("2") do |config|
 
   # Provider-specific configuration
   config.vm.provider "libvirt" do |lv|
-    lv.memory = "2048"
-    lv.cpus = 2
+    lv.memory = 1024
+    lv.cpus = 1
   end
 
   config.vm.provider "virtualbox" do |v|
-    v.memory = 2048
-    v.cpus = 2
+    v.memory = 1024
+    v.cpus = 1
   end
 
 
