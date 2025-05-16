@@ -24,7 +24,7 @@ Vagrant.configure("2") do |config|
   private_network_prefix = "192.168.56.1"  # Choose a suitable prefix
 
   number_machines = mimir_num + loki_num + grafana_num
-  range_machines = range_machines - 1
+  range_machines = number_machines - 1
   nodes = []
   (0..range_machines).each do |i|
     case i

@@ -121,6 +121,15 @@
               httpMethod: POST
             secureJsonData:
               httpHeaderValue1: staging
+          - name: loki
+            type: loki
+            url: http://loki1:3100
+            basicAuth: false
+            jsonData:
+              httpHeaderName1: X-Scope-OrgID
+              httpMethod: POST
+            secureJsonData:
+              httpHeaderValue1: staging
         grafana_dashboards:
           - dashboard_id: 1860
             revision_id: 40

@@ -41,3 +41,9 @@ To destroy all VMs :
 ```
 vagrant destroy --force
 ```
+
+## Configuring datasource and converting to config file
+
+To configure datasources and connecting loki/mimir some http headers may be needed. It may be sometimes hard to find the right options in the doc as it's not clear enough currently. A solution would be to configure it manually and then with the right curl you'll find the hidden option to add correctly in the datasource part of grafana role. See example below :
+
+`mkdir -p datasources && curl -s "http://{grafana-hostname}:{grafana-port}/api/datasources"  -u {grafana-user}:{grafana-password} | jq -c -M '.[]' | split -l 1 - datasources/`
