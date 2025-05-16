@@ -75,13 +75,6 @@
             }
           }
 
-  tasks:
-    - name: Install local ssh key
-      ansible.posix.authorized_key:
-        user: "{{ ansible_user }}"
-        state: present
-        key: "{{ lookup('file', '/home/tassadar/.ssh/framework.pub') }}"
-
 - name: Deploy Loki using the default configuration
   hosts: loki
   become: true
