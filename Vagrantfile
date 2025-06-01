@@ -6,6 +6,7 @@
 # backwards compatibility). Please don't change it unless you know what
 # you're doing.
 ENV['VAGRANT_NO_PARALLEL'] = 'yes'
+BRIDGE_INTERFACE = `ip route | awk '/^default/ {printf "%s", $5; exit 0}'`
 
 Vagrant.configure("2") do |config|
   # The most common configuration options are documented and commented below.
@@ -54,7 +55,7 @@ Vagrant.configure("2") do |config|
       machine.vm.network "private_network", ip: node["priv_ip"]
 
       # Public Network
-      machine.vm.network "public_network", dev: "enp4s0" # or "eth0" or your appropriate network interface
+      machine.vm.network "public_network", dev: "#{BRIDGE_INTERFACE}" # or "eth0" or your appropriate network interface
 
       machine.vm.provision :hosts, :sync_hosts => true
       machine.vm.disk :disk, size: "50GB", primary: true
