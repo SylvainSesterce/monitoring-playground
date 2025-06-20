@@ -26,23 +26,82 @@
 
           loki.relabel "journal" {
             forward_to = []
-
             rule {
               source_labels = ["__journal__systemd_unit"]
               target_label  = "unit"
             }
 
             rule {
-              source_labels = ["_HOSTNAME"]
+              source_labels = ["__journal__hostname"]
               target_label  = "hostname"
             }
 
+            rule {
+              source_labels = ["__journal_message"]
+              target_label  = "msg"
+            }
+
+            rule {
+              source_labels = ["__journal_priority"]
+              regex = "0"
+              target_label = "log_level"
+              replacement = "EMERGENCY"
+            }
+
+            rule {
+              source_labels = ["__journal_priority"]
+              regex = "1"
+              target_label = "log_level"
+              replacement = "ALERT"
+            }
+
+            rule {
+              source_labels = ["__journal_priority"]
+              regex = "2"
+              target_label = "log_level"
+              replacement = "CRITICAL"
+            }
+
+            rule {
+              source_labels = ["__journal_priority"]
+              regex = "3"
+              target_label = "log_level"
+              replacement = "ERROR"
+            }
+
+            rule {
+              source_labels = ["__journal_priority"]
+              regex = "4"
+              target_label = "log_level"
+              replacement = "WARNING"
+            }
+
+            rule {
+              source_labels = ["__journal_priority"]
+              regex = "5"
+              target_label = "log_level"
+              replacement = "NOTICE"
+            }
+
+            rule {
+              source_labels = ["__journal_priority"]
+              regex = "6"
+              target_label = "log_level"
+              replacement = "INFO"
+            }
+
+            rule {
+              source_labels = ["__journal_priority"]
+              regex = "7"
+              target_label = "log_level"
+              replacement = "DEBUG"
+            }
           }
 
           loki.source.journal "journal" {
             format_as_json = true
-            forward_to = [loki.write.grafana_loki.receiver]
-            relabel_rules = loki.relabel.journal.rules
+            forward_to     = [loki.write.grafana_loki.receiver]
+            relabel_rules  = loki.relabel.journal.rules
           }
 
           prometheus.exporter.unix "default" {
