@@ -1,11 +1,11 @@
 # Objective
 
-The main goal of this repo is to offer a small playground of VMs to test for arise at least a monitoring stack and maybe later on serve as a demo for some newcomers.
+The main goal of this repo is to offer a small playground of VMs to test a monitoring stack and maybe later on serve as a demo for some newcomers.
 
 ## Installation
 
 To deploy this you need :
-- Vagrant (use homebrew or see doc : https://developer.hashicorp.com/vagrant/docs/installation)
+- Vagrant (I use homebrew or see doc : https://developer.hashicorp.com/vagrant/docs/installation)
 - Ansible (recommend installing it using pipx see doc : https://docs.ansible.com/ansible/latest/installation_guide/intro_installation.html#installing-and-upgrading-ansible-with-pipx)
 
 ### Vagrant plugins
