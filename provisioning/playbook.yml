@@ -124,7 +124,7 @@
 
           prometheus.remote_write "prom" {
             endpoint {
-                url = "http://mimir1:8080/api/v1/push"
+                url = "http://mimir1.lan:8080/api/v1/push"
                 headers = {
                   "X-Scope-OrgID" = "1",
                 }
@@ -133,7 +133,7 @@
 
           loki.write "grafana_loki" {
             endpoint {
-                url = "http://loki1:3100/loki/api/v1/push"
+                url = "http://loki1.lan:3100/loki/api/v1/push"
                 headers = {
                   "X-Scope-OrgID" = "1",
                 }
@@ -203,7 +203,7 @@
         grafana_datasources:
           - name: mimir
             type: prometheus
-            url: http://mimir1:8080/prometheus
+            url: http://mimir1.lan:8080/prometheus
             basicAuth: false
             jsonData:
               httpHeaderName1: X-Scope-OrgID
@@ -212,7 +212,7 @@
               httpHeaderValue1: 1
           - name: loki
             type: loki
-            url: http://loki1:3100
+            url: http://loki1.lan:3100
             basicAuth: false
             jsonData:
               httpHeaderName1: X-Scope-OrgID

@@ -7,6 +7,7 @@
 # you're doing.
 ENV['VAGRANT_NO_PARALLEL'] = 'yes'
 BRIDGE_INTERFACE = `ip route | awk '/^default/ {printf "%s", $5; exit 0}'`
+FQDN_DOMAIN = "lan"
 
 Vagrant.configure("2") do |config|
   # The most common configuration options are documented and commented below.
@@ -56,6 +57,8 @@ Vagrant.configure("2") do |config|
   # Provision vm
   nodes.each do |node|
     config.vm.define node["name"] do |machine|
+      # define FQDN
+      machine.vm.hostname = "#{node["name"]}.#{FQDN_DOMAIN}"
 
       # Private Network
       machine.vm.network "private_network", ip: node["priv_ip"]
