@@ -147,6 +147,9 @@
     - role: grafana.grafana.loki
       vars:
         loki_version: "3.5.3"
+        limits_config:
+          ingestion_rate_strategy: local
+          ingestion_burst_size: 16
 
 - name: Deploy mimir
   hosts: mimir
@@ -187,9 +190,9 @@
         # Use memberlist, a gossip-based protocol, to enable the 3 Mimir replicas to communicate
         mimir_memberlist:
           join_members:
-            - mimir1:7946
-            - mimir2:7946
-            - mimir3:7946
+            - mimir1.lan:7946
+            - mimir2.lan:7946
+            - mimir3.lan:7946
 
 - name: Deploy Grafana
   hosts: grafana
