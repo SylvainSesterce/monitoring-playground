@@ -21,6 +21,12 @@ Vagrant.configure("2") do |config|
   config.vm.box = "generic/debian12"
   config.vm.box_version = "4.3.12"
 
+  config.hostmanager.enabled = true
+  config.hostmanager.manage_host = true
+  config.hostmanager.manage_guest = true
+  config.hostmanager.ignore_private_ip = false
+  config.hostmanager.include_offline = true
+
   # Private Network configuration
   private_network_prefix = "192.168.56.1"  # Choose a suitable prefix
 
@@ -57,7 +63,6 @@ Vagrant.configure("2") do |config|
       # Public Network
       machine.vm.network "public_network", dev: "#{BRIDGE_INTERFACE}" # or "eth0" or your appropriate network interface
 
-      machine.vm.provision :hosts, :sync_hosts => true
       machine.vm.disk :disk, size: "50GB", primary: true
 
       # Shared Folder

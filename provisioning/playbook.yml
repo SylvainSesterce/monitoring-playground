@@ -145,6 +145,8 @@
   become: true
   roles:
     - role: grafana.grafana.loki
+      vars:
+        loki_version: "3.5.3"
 
 - name: Deploy mimir
   hosts: mimir
@@ -180,7 +182,7 @@
         mimir_blocks_storage:
           storage_prefix: blocks
           tsdb:
-            dir: "{{ mimir_working_path}}/ingester"
+            dir: "{{ mimir_working_path }}/ingester"
 
         # Use memberlist, a gossip-based protocol, to enable the 3 Mimir replicas to communicate
         mimir_memberlist:

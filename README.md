@@ -13,7 +13,7 @@ Vagrant need a plugin to interact with libvirt : https://vagrant-libvirt.github.
 
 Plugin for updating /etc/hosts on each VMs :
 ```
-vagrant plugin install vagrant-hosts
+vagrant plugin install vagrant-hostmanager
 ```
 
 ### Ansible configuration
